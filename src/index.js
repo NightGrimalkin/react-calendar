@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import Calendar from './calendar.js';
 
 ReactDOM.render(
-  <h1>A</h1>,
+  <Calendar month={11} year={2021}/>,
   document.getElementById('root')
 );
 
