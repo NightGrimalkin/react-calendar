@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 
-function Day(props){
-    return(
-            <h2>{props.day}</h2>
-    );
+function Day(props) {
+  return (
+    <div onClick={props.controlingFunctionDay} dayval={props.dayval}>
+      <p className="singleDay">{props.day}</p>
+    </div>
+  );
 }
 
 export default Day;
