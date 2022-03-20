@@ -26,15 +26,23 @@ function Page(props) {
 
   function handleCalendarClickCal(e) {
     const monthVal = e.currentTarget.getAttribute("monthval");
-    console.log(monthVal);
     setWhatRender(1);
     setMonth(monthVal);
   }
   function handleCalendarClickDay(e) {
     const dayVal = e.currentTarget.getAttribute("dayval");
-    console.log(dayVal);
     setWhatRender(2);
     setDay(dayVal);
+  }
+
+  function revertHandleCalendarClickCal(e) {
+    const monthVal = e.currentTarget.getAttribute("monthval");
+    setWhatRender(0);
+    setMonth(0);
+  }
+  function revertHandleCalendarClickDay(e) {
+    setWhatRender(1);
+    setDay(0);
   }
 
   useEffect(() => {}, []);
@@ -75,6 +83,7 @@ function Page(props) {
         </>
       ) :(whatRender==1)? (
         <>
+        <button onClick={revertHandleCalendarClickCal}>Powrót do widoku lat</button>
           <h1>
             {year}/{month}
           </h1>
@@ -100,7 +109,12 @@ function Page(props) {
             <Calendar year={year} month={month} controlingFunctionDay={handleCalendarClickDay} />
           </div>
         </>
-      ):<DayView year={year} month={month} day={day}/>}
+      ):
+      <>
+      <button onClick={revertHandleCalendarClickDay}>Powrót do widoku miesiaca</button>
+      <DayView year={year} month={month} day={day}/>
+      </>
+      }
     </>
   );
 }

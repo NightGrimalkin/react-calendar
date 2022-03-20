@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import DayListElement from "./DayListElement";
 
 function DayView(props) {
@@ -7,13 +7,19 @@ function DayView(props) {
     listHoursInput: "",
   });
   const [notes, setNotes] = useState([]);
-  const [date, setDate] = useState([props.year, props.month, props.day]);
+
+  const memoizedLSArray = useMemo(() => returnArrayOfLocalStorage(), [localStorage.length]);
 
   function deleteListElement(e) {
     const index = e.target.getAttribute("indexed");
     let tempNotes = notes;
     tempNotes.splice(index, 1);
     setNotes([...tempNotes]);
+  }
+
+  function deleteLocalStorageItem(e) {
+    const index = e.target.getAttribute("indexed");
+    localStorage.removeItem(localStorage.key(index));
   }
 
   const handleInputChange = (e) => {
@@ -43,19 +49,53 @@ function DayView(props) {
       let event = {
         name: element.listElementInput,
         time: element.listHoursInput,
-        year: date[0],
-        month: date[1],
-        day: date[2],
+        year: props.year,
+        month: props.month,
+        day: props.day,
       };
-      localStorage.setItem(notes.listElementInput+": "+date[0]+"-"+date[1]+"-"+date[2],JSON.stringify(event));
+      localStorage.setItem(
+        event.name + ": " + props.year + "-" + props.month + "-" + props.day,
+        JSON.stringify(event)
+      );
       setNotes([]);
     });
   }
+
+  function returnArrayOfLocalStorage() {
+    let notesFromLocalStorage = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+      if (
+        item.year == props.year &&
+        item.month == props.month &&
+        item.day == props.day
+      ) {
+        notesFromLocalStorage.push(item);
+      }
+    }
+    return notesFromLocalStorage;
+  }
+
+  function returnLocalStorageList() {
+    return memoizedLSArray.map((value, index) => {
+      return (
+        <li key={index}>
+          <DayListElement
+            del={deleteLocalStorageItem}
+            number={index}
+            index={index + 1}
+            text={value.name}
+            time={value.time}
+          />
+        </li>
+      );
+    });
+  }
+
   function returnList() {
     const listToReturn = notes.map((value, index) => {
       return (
         <li key={index}>
-          {" "}
           <DayListElement
             del={deleteListElement}
             number={index}
@@ -88,7 +128,10 @@ function DayView(props) {
       <button onClick={addToList}>Dodaj</button>
 
       <div>{returnList()}</div>
+
       <button onClick={addToLocalStorage}>Zapisz</button>
+      <h2>Zapisane wydarzenia</h2>
+      {returnLocalStorageList()}
     </div>
   );
 }

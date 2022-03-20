@@ -5,6 +5,16 @@ import "./calendar.css";
 function Calendar(props) {
   const [date, setDate] = useState([props.year, props.month, 1]);
 
+  function checkEventsInDay(day) {
+    for (let i = 0; i < localStorage.length; i++) {
+      let item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+      if (item.year == date[0] && item.month == date[1] && item.day == day) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const months = [
     "January",
     "February",
@@ -74,7 +84,11 @@ function Calendar(props) {
   }, [props.year]);
 
   return (
-    <div className="smallCalendar" onClick={props.controlingfunctionCal} monthval={props.month}>
+    <div
+      className="smallCalendar"
+      onClick={props.controlingfunctionCal}
+      monthval={props.month}
+    >
       {weekDays.map((val, index) => {
         return (
           <p className="singleWeekDay" key={index + " " + val}>
@@ -84,8 +98,21 @@ function Calendar(props) {
       })}
       {createMonthArray(date[0], date[1], date[2]).map((val, index) => {
         return (
-          <div key={index} className="singleDay" >
-            {val != 0 ? <Day day={val} controlingFunctionDay={props.controlingFunctionDay} dayval={index}/> : ""}
+          <div
+            key={index}
+            className={
+              checkEventsInDay(index) == true ? "singleDayEvent" : "singleDay"
+            }
+          >
+            {val != 0 ? (
+              <Day
+                day={val}
+                controlingFunctionDay={props.controlingFunctionDay}
+                dayval={index}
+              />
+            ) : (
+              ""
+            )}
           </div>
         );
       })}

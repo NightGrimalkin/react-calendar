@@ -1,17 +1,26 @@
-.singleDay{
+.singleDay {
   border: 1px solid black;
   text-align: center;
 }
-.singleWeekDay{
+.singleWeekDay {
   margin: 0px;
   border: 1px solid black;
   text-align: center;
 }
-.singleDay p{
+.singleDay p {
   border: none;
 }
 .smallCalendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
+}
+.singleDayEvent {
+  background-color: red;
+  color: white;
+  border: 1px solid black;
+  text-align: center;
+}
+.singleDayEvent p {
+  border: none;
 }
